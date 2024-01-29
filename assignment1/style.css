@@ -6,3 +6,19 @@ html, body {
 canvas {
   display: block;
 }
+
+.sketch-container {
+  margin-top: 20px;
+  margin-bottom: 20px; 
+  margin-left: 20px;
+}
+
+.sketch-container h1 {
+  margin-top: 0;
+  text-align: left; 
+}
+
+.sketch-container div {
+  margin-left: 20px;
+
+}
