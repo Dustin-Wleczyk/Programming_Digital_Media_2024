@@ -1,6 +1,6 @@
 let s3 = function(example3) {
     example3.setup = function() {
-        example3.createCanvas(400, 200).parent("example3");
+        example3.createCanvas(260, 120).parent("example3");
     };
   
     example3.draw = function() {
