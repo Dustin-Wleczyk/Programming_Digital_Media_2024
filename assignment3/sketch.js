@@ -1,5 +1,73 @@
 let characters = [];
+class Character {
+  constructor(x,y,width,height,spriteSheet,animations) {
 
+    this.sprite = new Sprite(x,y,width,height);
+    this.sprite.spriteSheet = spriteSheet;
+    this.sprite.collider = 'none';
+    this.sprite.anis.frameDelay = 8;
+    this.sprite.addAnis(animations);
+    this.sprite.changeAni('stand');
+  }
+
+  stop() {
+    this.sprite.vel.x = 0;
+    this.sprite.vel.y = 0;
+    this.sprite.changeAni('stand');
+  }
+  
+  walkRight() {
+    this.sprite.changeAni('walkRight');
+    if (this.sprite.x + this.sprite.width / 4 < width) { 
+      this.sprite.vel.x = 1;
+      this.sprite.scale.x = 1;
+      this.sprite.vel.y = 0;
+      this.sprite.changeAni('walkRight');
+    } else {
+      this.sprite.velocity.x = 0;
+    }
+  }
+  
+  walkLeft() {
+    this.sprite.changeAni('walkRight');
+
+    if (this.sprite.x - this.sprite.width / 4 > 0) { 
+      this.sprite.vel.x = -1;
+      this.sprite.scale.x = -1;
+      this.sprite.vel.y = 0;
+      this.sprite.changeAni('walkRight');
+    } else {
+      this.sprite.velocity.x = 0;
+    }
+
+  }
+  
+  walkUp() {
+    this.sprite.changeAni('walkUp');
+    if (this.sprite.y - this.sprite.height / 4 > 0) { 
+      this.sprite.vel.y = -1;
+      this.sprite.vel.x = 0;
+      this.sprite.changeAni('walkUp');
+    } else {
+      this.sprite.velocity.y = 0;
+    }
+
+  }
+  
+  walkDown() {
+    this.sprite.changeAni('walkDown');
+
+    if (this.sprite.y + this.sprite.height / 4 < height) { 
+      this.sprite.vel.y = 1;
+      this.sprite.vel.x = 0;
+      this.sprite.changeAni('walkDown');
+    } else {
+      this.sprite.velocity.y = 0; 
+    }
+ 
+  }
+
+}
 
 function preload() {
 
@@ -10,27 +78,9 @@ function preload() {
     walkDown: {row: 5, col: 6, frames: 6}
   }
 
-  sprite1 = new Sprite(Math.floor(Math.random() * 201), Math.floor(Math.random() * 201), 80, 80);
-  sprite1.spriteSheet = 'assets/spleunky_guy.png';
-  sprite1.anis.frameDelay = 8;
-  sprite1.addAnis(animations);
-  sprite1.changeAni('walkRight');
-
-  sprite2 = new Sprite(Math.floor(Math.random() * 201), Math.floor(Math.random() * 201), 80, 80);
-  sprite2.spriteSheet = 'assets/green.png';
-  sprite2.anis.frameDelay = 8;
-  sprite2.addAnis(animations);
-  sprite2.changeAni('walkRight');
-
-  sprite3 = new Sprite(Math.floor(Math.random() * 201), Math.floor(Math.random() * 201), 80, 80);
-  sprite3.spriteSheet = 'assets/viking.png';
-  sprite3.anis.frameDelay = 8;
-  sprite3.addAnis(animations);
-  sprite3.changeAni('walkRight');
-  
-  characters.push(sprite1);
-  characters.push(sprite2);
-  characters.push(sprite3);
+  characters.push(new Character(100,100,80,80,'assets/spleunky_guy.png',animations));
+  characters.push(new Character(200,200,80,80,'assets/green.png',animations));
+  characters.push(new Character(50,50,80,80,'assets/viking.png',animations));
 
 }
 
@@ -41,85 +91,26 @@ function setup() {
 function draw() {
   background(220);
 
-  characters.forEach(char => {
-    char.rotation = 0;
-  });
-
-  function stop() {
-    characters.forEach(char => {
-      char.vel.x = 0;
-      char.vel.y = 0;
-      char.changeAni('stand');
-    });
-  }
-
-  function walkRight() {
-    characters.forEach(char => {
-      if (char.x + char.width / 2 < width) { 
-        char.vel.x = 1;
-        char.scale.x = 1;
-        char.vel.y = 0;
-        char.changeAni('walkRight');
-      } else {
-        char.velocity.x = 0;
-      }
-      char.changeAni('walkRight');
-    });
-  }
-  
-  function walkLeft() {
-    characters.forEach(char => {
-      if (char.x - char.width /2 > 0) { 
-        char.vel.x = -1;
-        char.scale.x = -1;
-        char.vel.y = 0;
-        char.changeAni('walkRight');
-      } else {
-        char.velocity.x = 0;
-      }
-      char.changeAni('walkRight'); 
-    });
-  }
-  
-  function walkUp() {
-    characters.forEach(char => {
-      if (char.y - char.height / 2 > 0) { 
-        char.vel.x = 0;
-        char.vel.y = -1;
-        char.changeAni('walkUp');
-      } else {
-        char.velocity.y = 0; 
-      }
-      char.changeAni('walkUp');
-    });
-  }
-  
-  function walkDown() {
-    characters.forEach(char => {
-      if (char.y + char.height / 2 < height) {
-        char.vel.x = 0;
-        char.vel.y = 1;
-        char.changeAni('walkDown');
-      } else {
-        char.velocity.y = 0; 
-      }
-      char.changeAni('walkDown');
-    });
-  }
-  
-
-  let moving = false;
-
   if (kb.pressing('d')) {
-    walkRight();
+    characters.forEach((char) => {
+      char.walkRight();
+    });
   } else if (kb.pressing('a')) {
-    walkLeft();
+    characters.forEach((char) => {
+      char.walkLeft();
+    });
   } else if (kb.pressing('w')) {
-    walkUp();
+    characters.forEach((char) => {
+      char.walkUp();
+    });
   } else if (kb.pressing('s')) {
-    walkDown();
+    characters.forEach((char) => {
+      char.walkDown();
+    });
   } else {
-    stop();
-    moving = false;
+    characters.forEach((char) => {
+      char.stop();
+    });
+
   }
 }
