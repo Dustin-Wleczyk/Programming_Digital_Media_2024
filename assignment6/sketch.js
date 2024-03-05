@@ -1,109 +1,71 @@
-// // Include p5.js library in your HTML before this script
-// // Include Tone.js library in your HTML before this script
+const synth1 = new Tone.PolySynth(Tone.FMSynth);
+const synth2 = new Tone.PolySynth(Tone.MembraneSynth);
+const synth3 = new Tone.PolySynth(Tone.MetalSynth);
+const synth4 = new Tone.PolySynth(Tone.Synth);
 
-// let synth, filter, delay, delayEnabled = false;
-
-// function setup() {
-//   createCanvas(400, 200); // Create a canvas for any additional UI/visual feedback
-
-//   // Initialize the synth with Tone.js
-//   synth = new Tone.PolySynth(Tone.Synth).toDestination();
-
-//   // Initialize the filter and connect it
-//   filter = new Tone.Filter(1000, "lowpass").toDestination();
-//   synth.connect(filter);
-
-//   // Initialize the delay but don't connect it yet
-//   delay = new Tone.FeedbackDelay("8n", 0.5);
-
-//   // UI Elements
-//   filterFreqSlider = createSlider(100, 10000, 1000);
-//   filterFreqSlider.position(10, height + 10);
-//   filterFreqSlider.input(() => filter.frequency.value = filterFreqSlider.value());
-
-//   toggleDelayButton = createButton('Toggle Delay');
-//   toggleDelayButton.position(10, filterFreqSlider.position().y + 40);
-//   toggleDelayButton.mousePressed(toggleDelay);
-// }
-
-// function draw() {
-//   background(220);
-// }
-
-// function keyPressed() {
-//   let noteMap = {
-//     'a': 'C4', 's': 'D4', 'd': 'E4', 'f': 'F4',
-//     'g': 'G4', 'h': 'A4', 'j': 'B4', 'k': 'C5'
-//   };
-//   let note = noteMap[key];
-//   if (note) {
-//     synth.triggerAttack(note);
-//   }
-// }
-
-// function keyReleased() {
-//   let noteMap = {
-//     'a': 'C4', 's': 'D4', 'd': 'E4', 'f': 'F4',
-//     'g': 'G4', 'h': 'A4', 'j': 'B4', 'k': 'C5'
-//   };
-//   let note = noteMap[key];
-//   if (note) {
-//     synth.triggerRelease(note);
-//   }
-// }
-
-// function toggleDelay() {
-//   delayEnabled = !delayEnabled;
-//   if (delayEnabled) {
-//     synth.disconnect();
-//     synth.connect(delay);
-//     delay.toDestination();
-//   } else {
-//     synth.disconnect();
-//     synth.connect(filter);
-//   }
-// }
-
-
-
-let synth = new Tone.PolySynth(Tone.Synth);
-let bend = new Tone.PitchShift();
-
+const bend = new Tone.PitchShift();
 bend.pitch = 0;
-synth.connect(bend);
+
+synth1.connect(bend);
 bend.toDestination();
 
-let notes = {
-  'a' : 'C4',
-  's' : 'D4',
-  'd' : 'E4',
-  'f' : 'F4',
-  'g' : 'G4',
-  'h' : 'A4',
-  'j' : 'B4',
-  'k' : 'C5'
+synth2.connect(bend);
+bend.toDestination();
+
+synth3.connect(bend);
+bend.toDestination();
+
+synth4.connect(bend);
+bend.toDestination();
+
+let notes = { 
+  'a': 'C4',
+  's': 'D4',
+  'd': 'Eb4',
+  'f': 'F4',
+  'g': 'G4',
+  'h': 'Ab4',
+  'j': 'B4',
+  'k': 'C5'
 }
 
 function setup() {
   createCanvas(400, 400);
 
-pitchSlider = createSlider(-12, 12, 0, 0.1); 
-pitchSlider.position (120, 200);
-pitchSlider.mouseMoved(()=> bend.pitch = pitchSlider.value());
+  //creating dropdown
+  mySelect = createSelect();
+  mySelect.position(138, 100);
+  mySelect.option('FM Synth');
+  mySelect.option('Membrane Synth');
+  mySelect.option('AM Synth');
+  mySelect.option('Synth');
+  mySelect.selected('FM Synth');
 
-}
+  
+  pitchSlider = createSlider (-12, 12, 0, 0.01);
+  pitchSlider.position (120,200);
+  pitchSlider.mouseMoved(() => bend.pitch = pitchSlider.value());
 
-function keyPressed(){
-  let playNotes = notes[key];
-  synth.triggerAttack(playNotes);
-}
-
-function keyReleased(){
-  let playNotes = notes[key];
-  synth.triggerRelease(playNotes,'+0.03');
 }
 
 function draw() {
-  background(100, 220, 150);
-  text ('play A-K for synth', 140, 180)
+  background(200, 200, 200);
+  text("Play A through K and change pitch with slider.", 75, 150)
+
+}
+
+function keyPressed() {
+  if (mySelect.selected() === 'FM Synth') {
+    let playNotes = notes[key];
+    synth1.triggerAttackRelease(playNotes, 0.8);
+  } else if (mySelect.selected() === 'Membrane Synth') {
+    let playNotes = notes[key];
+    synth2.triggerAttackRelease(playNotes, 0.8);
+  } else if (mySelect.selected() === 'AM Synth') {
+    let playNotes = notes[key];
+    synth3.triggerAttackRelease(playNotes, 0.8);
+  } else if (mySelect.selected() === 'Synth') {
+    let playNotes = notes[key];
+    synth4.triggerAttackRelease(playNotes, 0.8);
+  }
 }
